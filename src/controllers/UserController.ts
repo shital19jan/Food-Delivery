@@ -132,6 +132,19 @@ class UserController {
 
   });
 
+   activateUser= AsyncHandler(async (req: Request, res: Response)=> {
+    const id:string = req.params.id as string;
+
+    const user = await this.userService.activateUser(id);
+
+    return ApiResponse.success(
+      res,
+      HTTP_STATUS.OK,
+      "User activated successfully",
+      user
+    );
+}
+   )
 }
 
 export default UserController;
