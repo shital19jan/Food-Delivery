@@ -16,26 +16,26 @@ class UserController {
     this.userService = new UserService();
   }
 
-   createUser = AsyncHandler(async (req: Request, res: Response) => {
-      const userData = req.body;
-      userData.password = await bcrypt.hash(userData.password, 10);
-      console.log("userData", userData)
-      const user = await this.userService.createUser(userData);
+  createUser = AsyncHandler(async (req: Request, res: Response) => {
+    const userData = req.body;
+    userData.password = await bcrypt.hash(userData.password, 10);
+    console.log("userData", userData)
+    const user = await this.userService.createUser(userData);
 
-      console.log("Response:", user)
+    console.log("Response:", user)
 
-      return ApiResponse.success(
-        res,
-        HTTP_STATUS.CREATED,
-        MESSAGES.CREATED,
-        user,
-      );
+    return ApiResponse.success(
+      res,
+      HTTP_STATUS.CREATED,
+      MESSAGES.CREATED,
+      user,
+    );
   });
 
   getAllUsers = AsyncHandler(async (req: Request, res: Response) => {
-    
+
     const {
-      page = '1', 
+      page = '1',
       limit = '10',
       search,
       status,
@@ -44,87 +44,89 @@ class UserController {
     } = req.query;
 
     const filter: any = {};
-    
-    if(search){
+
+    if (search) {
       filter.name = {
         $regex: search,
         $options: 'i'
       }
     }
 
-    if(status){
+    if (status) {
       filter.status = status;
     }
 
     const options = {
-      skip:(Number(page) - 1 ) * Number(limit),
+      skip: (Number(page) - 1) * Number(limit),
       limit: Number(limit),
 
       sort: { [sortBy as string]: sortOrder === 'asc' ? 1 : -1 }
     }
-    const users =  await this.userService.getAllUsers(filter, options);
+    const users = await this.userService.getAllUsers(filter, options);
 
     return ApiResponse.success(
-        res,
-        HTTP_STATUS.OK,
-        MESSAGES.FETCHED,
-        users,
-      );
+      res,
+      HTTP_STATUS.OK,
+      MESSAGES.FETCHED,
+      users,
+    );
   });
 
   updateUser = AsyncHandler(async (req: Request, res: Response) => {
-      const id: string = req.params.id as string;
-      const updateData = req.body;
-      const user = await this.userService.updateUser(
-        id,
-        updateData,
-      );
-      return ApiResponse.success(
-        res,
-        HTTP_STATUS.CREATED,
-        MESSAGES.UPDATED,
-        user,
-      );
+    const id: string = req.params.id as string;
+    const updateData = req.body;
+    const user = await this.userService.updateUser(
+      id,
+      updateData,
+    );
+    return ApiResponse.success(
+      res,
+      HTTP_STATUS.CREATED,
+      MESSAGES.UPDATED,
+      user,
+    );
   });
 
-  deleteUser = AsyncHandler( async (req: Request, res: Response) => {
-      const id: string = req.params.id as string;
-      const user = await this.userService.deletUser(id);
-      return ApiResponse.success(
-        res,
-        HTTP_STATUS.OK,
-        MESSAGES.DELETED,
-        user,
-      );
+  deleteUser = AsyncHandler(async (req: Request, res: Response) => {
+    const id: string = req.params.id as string;
+    const user = await this.userService.deletUser(id);
+    return ApiResponse.success(
+      res,
+      HTTP_STATUS.OK,
+      MESSAGES.DELETED,
+      user,
+    );
   });
 
-  login =  AsyncHandler(async (req: Request, res: Response) => {
-    
-    const {email, password} = req.body;
+  login = AsyncHandler(async (req: Request, res: Response) => {
 
-    const user =  await this.userService.getUserByEmail(email);
+    const { email, password } = req.body;
+
+    const user = await this.userService.getUserByEmail(email);
 
     const isMatch = await bcrypt.compare(password, user.password);
 
-    if(isMatch){
+    if (isMatch) {
       const token = jwt.sign(
-          {
-            userId: user._id,
-          },
-          JWT_SECRET,
-          {
-            expiresIn: "1h"
-          }
-        );
+        {
+          userId: user._id,
+          role: user.role,
+
+        },
+        JWT_SECRET,
+        {
+          expiresIn: "1h"
+        }
+      );
       return ApiResponse.success(
-          res,
-          HTTP_STATUS.OK,
-          MESSAGES.FETCHED,
-          {token},
-        );
-    }else{
+        res,
+        HTTP_STATUS.OK,
+        MESSAGES.FETCHED,
+        { token },
+      );
+    } else {
       res.status(400).json({
-        message:"email / password is wrong"
+        message: "email / password is wrong"
       })
     }
 

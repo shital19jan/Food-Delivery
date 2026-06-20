@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
-import MenuItemInterface from "../Interfaces/MenuItem.interface";
-
+import MenuItemInterface from '../interfaces/MenuItem.interface';
+// schema
 const menuItemSchema = new mongoose.Schema<MenuItemInterface>({
-      name: {
+  name: {
     type: String,
     minLength: [3, "Name must be at least 3 characters"],
     maxLength: [40, "Name must be at exceed 40 characters"],
@@ -13,6 +13,7 @@ const menuItemSchema = new mongoose.Schema<MenuItemInterface>({
     type: String,
     minLength: [10, "Name must be at least 10 characters"],
     maxLength: [100, "Name must be at exceed 100 characters"],
+    required: true
   },
   rating:{
     type: Number,
@@ -22,10 +23,12 @@ const menuItemSchema = new mongoose.Schema<MenuItemInterface>({
   price:{
     type: Number,
     min:1,
-    max: 100000
+    max: 100000,
+    required: true
   },
   imgURL:{
-    type: String
+    type: String,
+    default:""
   },
   isCustomisable: {
     type: Boolean,
@@ -42,16 +45,15 @@ const menuItemSchema = new mongoose.Schema<MenuItemInterface>({
   calories: {
     type: Number,
     min:0,
-    max: 1000
+    max: 3000
   },
   menuCategoryId: {
     type: mongoose.Schema.Types.ObjectId,
     ref:'MenuCategory',
     required: true
   },
+});
 
-})
-
-const MenuItem =mongoose.model<MenuItemInterface>("MenuItem",menuItemSchema);
+const MenuItem = mongoose.model<MenuItemInterface>("MenuItem", menuItemSchema);
 
 export default MenuItem;

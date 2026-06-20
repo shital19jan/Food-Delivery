@@ -2,12 +2,14 @@ import express from 'express';
 import MenuCategoryController  from '../controllers/MenuCategoryController';
 import validateMiddleware from '../middleware/validateMiddleware';
 import menuCategoryValidatorSchema from '../validators/menuCategoryValidators';
+import authMiddleware from '../middleware/authMiddleware';
+import authorizeMiddleware from '../middleware/authorizeMiddleware';
 
 const router = express.Router();
 
 const menuCategoryController = new MenuCategoryController();
 
-router.post('/create', validateMiddleware.validate(menuCategoryValidatorSchema) , menuCategoryController.createMenuCategory);
+router.post('/create', authMiddleware,authorizeMiddleware("RES_OWNER"), validateMiddleware.validate(menuCategoryValidatorSchema) , menuCategoryController.createMenuCategory);
 router.post('/create/bulk', menuCategoryController.createBulkMenuCategory)
 router.put('/:id', validateMiddleware.validate(menuCategoryValidatorSchema) ,menuCategoryController.updateMenuCategory);
 router.delete('/delete/bulk', menuCategoryController.deleteBulkMenuCategory)
