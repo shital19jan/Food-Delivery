@@ -3,7 +3,6 @@ import MESSAGES from "../constants/Messages";
 import ConflictError from '../utils/errors/ConflictErrors'
 import InternalServerError from "../utils/errors/InternalServerError";
 import NotFoundError from "../utils/errors/NotFoundErrors";
-import User from "../models/User.Model";
 
 
 class UserService {
@@ -77,25 +76,7 @@ class UserService {
         }
     }
 
-    // async activateUser(id: string) {
-    //     const user = await this.userRepository.findById(id);
 
-    //     if (!user) {
-    //         throw new Error("user not found");
-    //     }
-    //     if (user.status === "ACTIVE") {
-    //         throw new Error("User is already active");
-    //     }
-    //     if (user.status === "BLOCKED") {
-    //         throw new Error("Blocked user can not be activated");
-    //     }
-    //     if (user.status === "INACTIVE" || user.status === "PENDING") {
-    //         user.status = "ACTIVE";
-    //         await user.save();
-    //     }
-    //     return user;
-
-    // }
 
 async updateUserStatus(id: string, updateData: { status: string }) {
     const user = await this.userRepository.updateById(id, updateData);
