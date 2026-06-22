@@ -3,13 +3,13 @@ import MenuItemController  from '../controllers/MenuItemController';
 import validateMiddleware from '../middleware/validateMiddleware';
 import menuItemValidatorSchema from '../validators/menuItemValidators';
 import authMiddleware from '../middleware/authMiddleware';
-import authorizeMiddleware from '../middleware/authorizeMiddleware';
+import resOwnerMiddlware from '../middleware/resOwnerMiddlware';
 
 const router = express.Router();
 
 const menuItemController = new MenuItemController();
 
-router.post('/create',authMiddleware,authorizeMiddleware("RES_OWNER"), validateMiddleware.validate(menuItemValidatorSchema) , menuItemController.createMenuItem);
+router.post('/create',authMiddleware,resOwnerMiddlware, validateMiddleware.validate(menuItemValidatorSchema) , menuItemController.createMenuItem);
 router.post('/create/bulk', menuItemController.createBulkMenuItem)
 router.put('/:id', validateMiddleware.validate(menuItemValidatorSchema) ,menuItemController.updateMenuItem);
 router.delete('/delete/bulk', menuItemController.deleteBulkMenuItem)

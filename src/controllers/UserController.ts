@@ -134,8 +134,9 @@ class UserController {
 
    activateUser= AsyncHandler(async (req: Request, res: Response)=> {
     const id:string = req.params.id as string;
+    const {status} =req.body;
 
-    const user = await this.userService.activateUser(id);
+    const user = await this.userService.updateUserStatus(id,{status});
 
     return ApiResponse.success(
       res,

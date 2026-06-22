@@ -9,7 +9,7 @@ const router = express.Router();
 
 const restaurantController = new RestaurantController();
 
-router.post('/create',  authMiddleware, authorizeMiddleware("ADMIN"),  validateMiddleware.validate(restaurantValidateSchema) , restaurantController.createRestaurant);
+router.post('/create',  authMiddleware, authorizeMiddleware,  validateMiddleware.validate(restaurantValidateSchema) , restaurantController.createRestaurant);
 router.post('/create/bulk', restaurantController.createBulkRestaurant)
 router.put('/:id', validateMiddleware.validate(restaurantValidateSchema) ,restaurantController.updateRestaurant);
 router.delete('/delete/bulk', restaurantController.deleteBulkRestaurant)

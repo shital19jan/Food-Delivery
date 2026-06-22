@@ -1,28 +1,27 @@
 import { Request, Response, NextFunction } from "express";
-import ApiResponse from "../utils/ApiResponse";
 import HTTP_STATUS from "../constants/Httpstatus";
 import MESSAGES from "../constants/Messages";
+import ApiResponse from "../utils/ApiResponse";
 
-const authorize =
-  (...roles: string[]) =>
+const authorizeMiddleware =
   (req: any, res: Response, next: NextFunction) => {
-    if (!req.user) {
+    const user = req.user;
+    if (!user) {
       return ApiResponse.error(
         res,
         HTTP_STATUS.UNAUTHORIZED,
         MESSAGES.UNAUTHORIZED
       );
     }
-
-    if (!roles.includes(req.user.role)) {
+if(user.role !== "ADMIN"){
       return ApiResponse.error(
         res,
         HTTP_STATUS.FORBIDDEN,
-        "You are not authorized to perform this action."
+        " only ADMIN has authority."
       );
     }
 
     next();
   };
 
-export default authorize;
+export default authorizeMiddleware;

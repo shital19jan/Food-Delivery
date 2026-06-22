@@ -14,6 +14,6 @@ router.post('/create', validateMiddleware.validate(userValidateSchema) , userCon
 router.put('/:id', validateMiddleware.validate(userValidateSchema) ,userController.updateUser);
 router.delete('/delete/:id', userController.deleteUser);
 router.get('/', userController.getAllUsers);
-router.put("/:id/activate",authMiddleware,authorizeMiddleware("RES_OWNER"),userController.activateUser)
+router.put("/:id/status",authMiddleware,authorizeMiddleware, userController.activateUser)
 
 export default router;

@@ -77,25 +77,35 @@ class UserService {
         }
     }
 
-    async activateUser(id: string) {
-        const user = await this.userRepository.findById(id);
+    // async activateUser(id: string) {
+    //     const user = await this.userRepository.findById(id);
 
-        if (!user) {
-            throw new Error("user not found");
-        }
-        if (user.status === "ACTIVE") {
-            throw new Error("User is already active");
-        }
-        if (user.status === "BLOCKED") {
-            throw new Error("Blocked user can not be activated");
-        }
-        if (user.status === "INACTIVE" || user.status === "PENDING") {
-            user.status = "ACTIVE";
-            await user.save();
-        }
-        return user;
+    //     if (!user) {
+    //         throw new Error("user not found");
+    //     }
+    //     if (user.status === "ACTIVE") {
+    //         throw new Error("User is already active");
+    //     }
+    //     if (user.status === "BLOCKED") {
+    //         throw new Error("Blocked user can not be activated");
+    //     }
+    //     if (user.status === "INACTIVE" || user.status === "PENDING") {
+    //         user.status = "ACTIVE";
+    //         await user.save();
+    //     }
+    //     return user;
 
+    // }
+
+async updateUserStatus(id: string, updateData: { status: string }) {
+    const user = await this.userRepository.updateById(id, updateData);
+
+    if (!user) {
+        throw new NotFoundError(MESSAGES.NOT_FOUND);
     }
+
+    return user;
+}
 }
 
 export default UserService;
